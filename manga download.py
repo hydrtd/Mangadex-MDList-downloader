@@ -3,6 +3,7 @@ import json
 import urllib.request
 import os
 from pathlib import Path
+import time
 
 # input username, password
 # return access token (str)
@@ -107,8 +108,9 @@ def download(path,url):
         raise Exception('sometingwong with downloading the url')
 
 
-ListID=<MDLIST ID HERE>
-token=login(<USERNAME HERE>,<PW HERE>)
+ListID=<MDLIST ID>
+token=login(<USERNAME>,<PASSWORD>)
+cooldown=5
 
 mangaList=getList(token,ListID)
 for mangaID in mangaList:
@@ -129,15 +131,16 @@ for mangaID in mangaList:
 
     for i in chapterList:
         chapterID=chapterIDs[str(i)]
-        downloadURL=getDownloadURL(chapterID)
         with open('log.json', 'r') as openfile:
             log = json.load(openfile)
         loggedChapters=log[mangaID]
         if i in loggedChapters:
             print(mangaName+' chapter '+str(i)+' already downloaded (from log)')
         else:
+            downloadURL=getDownloadURL(chapterID)
             count=1
             for url in downloadURL:
+                time.sleep(cooldown)
                 cwd = Path.cwd()
                 sub = Path(mangaName1)
                 sub1 = Path(str(i))
