@@ -1,7 +1,5 @@
 import requests # type: ignore
 import json
-import urllib.request
-import os
 from pathlib import Path
 import time
 
@@ -96,7 +94,13 @@ def getMangaName(mangaID):
 # input file path, download url
 # return nothing.
 def download(path,url):
-    response = requests.get(url)
+    dead = False
+    while not dead:
+        try:
+            response = requests.get(url, timeout=10)
+            dead = True
+        except requests.exceptions.Timeout:
+            print('Timed out, retrying...')
     file_Path = path
 
     if response.status_code == 200:
@@ -110,7 +114,6 @@ def download(path,url):
 
 ListID="<LISTID>"
 token=login('<USERNAME>','<PASSWORD>')
-cooldown=3
 
 mangaList=getList(token,ListID)
 for mangaID in mangaList:
@@ -140,7 +143,6 @@ for mangaID in mangaList:
             downloadURL=getDownloadURL(chapterID)
             count=1
             for url in downloadURL:
-                time.sleep(cooldown)
                 cwd = Path.cwd()
                 sub = Path(mangaName1)
                 if i == None:
