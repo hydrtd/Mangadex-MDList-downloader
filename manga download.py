@@ -101,6 +101,9 @@ def download(path,url):
             dead = True
         except requests.exceptions.Timeout:
             print('Timed out, retrying...')
+        except requests.exceptions.ConnectionError:
+            print('Connection Error, trying again in 10 seconds')
+            time.sleep(10)
     file_Path = path
 
     if response.status_code == 200:
