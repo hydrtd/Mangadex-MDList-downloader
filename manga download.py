@@ -108,9 +108,9 @@ def download(path,url):
         raise Exception('sometingwong with downloading the url')
 
 
-ListID=<MDLIST ID>
-token=login(<USERNAME>,<PASSWORD>)
-cooldown=5
+ListID="<LISTID>"
+token=login('<USERNAME>','<PASSWORD>')
+cooldown=3
 
 mangaList=getList(token,ListID)
 for mangaID in mangaList:
@@ -130,7 +130,7 @@ for mangaID in mangaList:
             json.dump(log, outfile)
 
     for i in chapterList:
-        chapterID=chapterIDs[str(i)]
+        chapterID=chapterIDs[i]
         with open('log.json', 'r') as openfile:
             log = json.load(openfile)
         loggedChapters=log[mangaID]
@@ -143,7 +143,10 @@ for mangaID in mangaList:
                 time.sleep(cooldown)
                 cwd = Path.cwd()
                 sub = Path(mangaName1)
-                sub1 = Path(str(i))
+                if i == None:
+                    sub1 = Path('Oneshot')
+                else:
+                    sub1 = Path(str(i))
                 file = Path(str(count)+'.png')
                 count=count+1
                 paf = cwd / sub / sub1
@@ -152,7 +155,10 @@ for mangaID in mangaList:
                 except FileExistsError:
                     print('FileExistsError')
                 paf = paf / file
-                print(mangaName+' chapter '+i)
+                if i == None:
+                    print(mangaName+' chapter Oneshot')
+                else:
+                    print(mangaName+' chapter '+i) 
                 print(url)
                 download(paf,url)
             loggedChapters.append(i)
